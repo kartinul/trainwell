@@ -14,8 +14,4 @@ struct ExerciseLibrary {
         let data = try! Data(contentsOf: url)
         return try! JSONDecoder().decode([Exercise].self, from: data)
     }()
-
-    static func byCategory(_ category: String) -> [Exercise] {
-        all.filter { $0.category == category }
-    }
 }

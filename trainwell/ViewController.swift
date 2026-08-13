@@ -217,10 +217,8 @@ class GeminiService {
 
 class HomeViewController: UIViewController {
 
-    @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var focusTextField: UITextField!
     @IBOutlet weak var generateButton: UIButton!
-    @IBOutlet weak var blurView: UIVisualEffectView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -342,7 +340,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     var exercises: [Exercise] = []
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var startButton: UIButton!
     
     override func viewDidLoad() {
@@ -357,11 +354,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         if tableView != nil {
             tableView.delegate = self
             tableView.dataSource = self
-        }
-        
-        if let btn = startButton {
-            btn.tintColor = .white
-            btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         }
     }
     
@@ -387,7 +379,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
 class ExerciseCell: UITableViewCell {
     
-    @IBOutlet weak var containerView: UIVisualEffectView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     
