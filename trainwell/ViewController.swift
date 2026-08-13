@@ -129,48 +129,35 @@ struct WorkoutPlan: Codable {
 }
 
 
-class OpenAIService {
-    static let shared = OpenAIService()
-    private let apiKey = "YOUR_OPENAI_API_KEY_HERE"
+class GeminiService {
+    static let shared = GeminiService()
 
     func generatePlan(focus: String, completion: @escaping (WorkoutPlan?) -> Void) {
-        if apiKey == "YOUR_OPENAI_API_KEY_HERE" {
-            let mock = WorkoutPlan(week: [
-                DayPlan(day: "Monday", rest: false, focus: "Upper Body", exercises: ["3-4_sit-up", "bench_dip_knees_bent", "body-up"]),
-                DayPlan(day: "Tuesday", rest: false, focus: "Lower Body", exercises: ["bench_hip_extension", "jump_squat"]),
-                DayPlan(day: "Wednesday", rest: true, focus: nil, exercises: nil),
-                DayPlan(day: "Thursday", rest: false, focus: "Core", exercises: ["air_bike", "alternate_heel_touchers", "bottoms-up"]),
-                DayPlan(day: "Friday", rest: false, focus: "Full Body", exercises: ["balance_board", "runners_stretch", "suspended_push-up"]),
-                DayPlan(day: "Saturday", rest: true, focus: nil, exercises: nil),
-                DayPlan(day: "Sunday", rest: false, focus: "Flexibility", exercises: ["butterfly_yoga_pose", "chest_and_front_of_shoulder_stretch"])
-            ])
-            DispatchQueue.main.async {
-                completion(mock)
-            }
-            return
-        }
-
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=\(Secrets.geminiAPIKey)")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         let prompt = """
+        You are a fitness assistant returning ONLY JSON.
         Generate a 7-day workout plan based on this focus: "\(focus)".
         Use only these exercise IDs:
         3-4_sit-up, air_bike, alternate_heel_touchers, balance_board, bench_dip_knees_bent, bench_hip_extension, biceps_narrow_pull-ups, body-up, bottoms-up, butterfly_yoga_pose, chest_and_front_of_shoulder_stretch, isometric_chest_squeeze, jump_squat, reverse_hyper_on_flat_bench, runners_stretch, superman_push-up, suspended_push-up.
-        Return ONLY a JSON object matching this structure:
+        Return a JSON object matching this structure:
         {"week": [{"day": "Monday", "rest": false, "focus": "Upper Body", "exercises": ["id1", "id2"]}, ...]}
         """
 
         let body: [String: Any] = [
-            "model": "gpt-4o-mini",
-            "messages": [
-                ["role": "system", "content": "You are a fitness assistant returning JSON."],
-                ["role": "user", "content": prompt]
+            "contents": [
+                [
+                    "parts": [
+                        ["text": prompt]
+                    ]
+                ]
             ],
-            "response_format": ["type": "json_object"]
+            "generationConfig": [
+                "responseMimeType": "application/json"
+            ]
         ]
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
@@ -182,10 +169,11 @@ class OpenAIService {
             }
             do {
                 if let jsonDict = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let choices = jsonDict["choices"] as? [[String: Any]],
-                   let message = choices.first?["message"] as? [String: Any],
-                   let content = message["content"] as? String,
-                   let contentData = content.data(using: .utf8) {
+                   let candidates = jsonDict["candidates"] as? [[String: Any]],
+                   let content = candidates.first?["content"] as? [String: Any],
+                   let parts = content["parts"] as? [[String: Any]],
+                   let text = parts.first?["text"] as? String,
+                   let contentData = text.data(using: .utf8) {
                     let plan = try JSONDecoder().decode(WorkoutPlan.self, from: contentData)
                     DispatchQueue.main.async { completion(plan) }
                 } else {
@@ -201,9 +189,10 @@ class OpenAIService {
 
 class HomeViewController: UIViewController {
 
-    let backgroundImageView = UIImageView()
-    let focusTextField = UITextField()
-    let generateButton = UIButton(type: .system)
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var focusTextField: UITextField!
+    @IBOutlet weak var generateButton: UIButton!
+    @IBOutlet weak var blurView: UIVisualEffectView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -211,19 +200,10 @@ class HomeViewController: UIViewController {
     }
 
     func setupUI() {
-        view.backgroundColor = .black
-        
-        // Background (you can set an image if you have one, or just dark color)
-        backgroundImageView.frame = view.bounds
-        backgroundImageView.contentMode = .scaleAspectFill
-        backgroundImageView.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        view.addSubview(backgroundImageView)
-        
         let titleLabel = UILabel()
         titleLabel.text = "TRAINWELL"
         titleLabel.font = UIFont.systemFont(ofSize: 36, weight: .bold)
         titleLabel.textColor = .white
-        titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
 
@@ -231,76 +211,88 @@ class HomeViewController: UIViewController {
         subtitleLabel.text = "What do you want to focus on?"
         subtitleLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         subtitleLabel.textColor = .lightGray
-        subtitleLabel.textAlignment = .center
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(subtitleLabel)
-
-        focusTextField.placeholder = "e.g. Upper body strength, cardio..."
-        focusTextField.textColor = .white
-        focusTextField.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        focusTextField.layer.cornerRadius = 12
-        focusTextField.layer.borderWidth = 1
-        focusTextField.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
-        focusTextField.leftView = paddingView
-        focusTextField.leftViewMode = .always
-        focusTextField.translatesAutoresizingMaskIntoConstraints = false
-        if let placeholder = focusTextField.placeholder {
-            focusTextField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor.lightGray])
+        
+        if let bg = backgroundImageView {
+            bg.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                bg.topAnchor.constraint(equalTo: view.topAnchor),
+                bg.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                bg.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                bg.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
         }
-        view.addSubview(focusTextField)
 
-        // Liquid Glass Button
-        let blurEffect = UIBlurEffect(style: .systemThinMaterialDark)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.layer.cornerRadius = 16
-        blurView.clipsToBounds = true
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurView)
-
-        generateButton.setTitle("Generate Plan", for: .normal)
-        generateButton.setTitleColor(.white, for: .normal)
-        generateButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        generateButton.translatesAutoresizingMaskIntoConstraints = false
-        generateButton.addTarget(self, action: #selector(generateTapped), for: .touchUpInside)
-        blurView.contentView.addSubview(generateButton)
-
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 40),
-            subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
-            focusTextField.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20),
-            focusTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            focusTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            focusTextField.heightAnchor.constraint(equalToConstant: 50),
-
-            blurView.topAnchor.constraint(equalTo: focusTextField.bottomAnchor, constant: 30),
-            blurView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            blurView.widthAnchor.constraint(equalToConstant: 200),
-            blurView.heightAnchor.constraint(equalToConstant: 56),
-
-            generateButton.topAnchor.constraint(equalTo: blurView.topAnchor),
-            generateButton.bottomAnchor.constraint(equalTo: blurView.bottomAnchor),
-            generateButton.leadingAnchor.constraint(equalTo: blurView.leadingAnchor),
-            generateButton.trailingAnchor.constraint(equalTo: blurView.trailingAnchor)
-        ])
+        if let blurView = blurView {
+            blurView.layer.cornerRadius = 16
+            blurView.clipsToBounds = true
+            blurView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                blurView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                blurView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
+                blurView.widthAnchor.constraint(equalToConstant: 200),
+                blurView.heightAnchor.constraint(equalToConstant: 56)
+            ])
+            
+            if let btn = generateButton {
+                btn.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    btn.topAnchor.constraint(equalTo: blurView.topAnchor),
+                    btn.bottomAnchor.constraint(equalTo: blurView.bottomAnchor),
+                    btn.leadingAnchor.constraint(equalTo: blurView.leadingAnchor),
+                    btn.trailingAnchor.constraint(equalTo: blurView.trailingAnchor)
+                ])
+            }
+        }
+        
+        if let tf = focusTextField {
+            tf.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+            tf.layer.cornerRadius = 12
+            tf.layer.borderWidth = 1
+            tf.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
+            tf.leftView = paddingView
+            tf.leftViewMode = .always
+            if let placeholder = tf.placeholder {
+                tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor.lightGray])
+            }
+            tf.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                tf.bottomAnchor.constraint(equalTo: blurView.topAnchor, constant: -30),
+                tf.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+                tf.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+                tf.heightAnchor.constraint(equalToConstant: 50)
+            ])
+            
+            NSLayoutConstraint.activate([
+                subtitleLabel.bottomAnchor.constraint(equalTo: tf.topAnchor, constant: -20),
+                subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                titleLabel.bottomAnchor.constraint(equalTo: subtitleLabel.topAnchor, constant: -40),
+                titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
+        }
     }
 
-    @objc func generateTapped() {
+    @IBAction func generateTapped(_ sender: UIButton) {
         let focus = focusTextField.text?.isEmpty == false ? focusTextField.text! : "General fitness"
-        generateButton.setTitle("Generating...", for: .normal)
+        
+        generateButton.configuration?.showsActivityIndicator = true
+        generateButton.setTitle("", for: .normal)
         generateButton.isEnabled = false
         
-        OpenAIService.shared.generatePlan(focus: focus) { [weak self] plan in
+        GeminiService.shared.generatePlan(focus: focus) { [weak self] plan in
+            self?.generateButton.configuration?.showsActivityIndicator = false
             self?.generateButton.setTitle("Generate Plan", for: .normal)
             self?.generateButton.isEnabled = true
             
             if let plan = plan {
-                let weekVC = WeekViewController(plan: plan)
-                self?.navigationController?.pushViewController(weekVC, animated: true)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                if let weekVC = storyboard.instantiateViewController(withIdentifier: "WeekViewController") as? WeekViewController {
+                    weekVC.plan = plan
+                    self?.navigationController?.pushViewController(weekVC, animated: true)
+                }
             }
         }
     }
@@ -309,107 +301,99 @@ import UIKit
 
 class WeekViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let plan: WorkoutPlan
-    let tableView = UITableView()
-    
-    init(plan: WorkoutPlan) {
-        self.plan = plan
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    var plan: WorkoutPlan!
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Your Weekly Plan"
-        view.backgroundColor = .black
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .black
-        tableView.separatorStyle = .none
-        tableView.register(DayCell.self, forCellReuseIdentifier: "DayCell")
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+        if tableView != nil {
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return plan.week.count
+        return plan?.week.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayCell", for: indexPath) as! DayCell
-        cell.configure(with: plan.week[indexPath.row])
+        if let dayPlan = plan?.week[indexPath.row] {
+            cell.configure(with: dayPlan)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let dayPlan = plan.week[indexPath.row]
+        guard let dayPlan = plan?.week[indexPath.row] else { return }
         if dayPlan.rest == true { return }
-        let dayVC = DayViewController(dayPlan: dayPlan)
-        navigationController?.pushViewController(dayVC, animated: true)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let dayVC = storyboard.instantiateViewController(withIdentifier: "DayViewController") as? DayViewController {
+            dayVC.dayPlan = dayPlan
+            navigationController?.pushViewController(dayVC, animated: true)
+        }
     }
 }
 
 class DayCell: UITableViewCell {
     
-    let containerView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterialDark))
-    let dayLabel = UILabel()
-    let focusLabel = UILabel()
+    @IBOutlet weak var containerView: UIVisualEffectView!
+    @IBOutlet weak var dayLabel: UILabel!
+    @IBOutlet weak var focusLabel: UILabel!
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func awakeFromNib() {
+        super.awakeFromNib()
         backgroundColor = .clear
-        selectionStyle = .none
         
-        containerView.layer.cornerRadius = 16
-        containerView.clipsToBounds = true
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(containerView)
-        
-        dayLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        dayLabel.textColor = .white
-        dayLabel.translatesAutoresizingMaskIntoConstraints = false
-        containerView.contentView.addSubview(dayLabel)
-        
-        focusLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        focusLabel.textColor = .lightGray
-        focusLabel.translatesAutoresizingMaskIntoConstraints = false
-        containerView.contentView.addSubview(focusLabel)
-        
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+        if let containerView = containerView {
+            containerView.layer.cornerRadius = 16
+            containerView.clipsToBounds = true
+            containerView.translatesAutoresizingMaskIntoConstraints = false
             
-            dayLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            dayLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+                containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+                containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            ])
             
-            focusLabel.topAnchor.constraint(equalTo: dayLabel.bottomAnchor, constant: 4),
-            focusLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            focusLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
-        ])
+            if let dl = dayLabel {
+                dl.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    dl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+                    dl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20)
+                ])
+            }
+            if let fl = focusLabel {
+                fl.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    fl.topAnchor.constraint(equalTo: dayLabel.bottomAnchor, constant: 4),
+                    fl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+                    fl.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+                ])
+            }
+        }
     }
     
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    
     func configure(with dayPlan: DayPlan) {
-        dayLabel.text = dayPlan.day
+        dayLabel?.text = dayPlan.day
         if dayPlan.rest == true {
-            focusLabel.text = "Rest Day"
-            containerView.alpha = 0.5
+            focusLabel?.text = "Rest Day"
+            containerView?.alpha = 0.5
         } else {
-            focusLabel.text = dayPlan.focus ?? "Workout"
-            containerView.alpha = 1.0
+            focusLabel?.text = dayPlan.focus ?? "Workout"
+            containerView?.alpha = 1.0
         }
     }
 }
@@ -417,72 +401,65 @@ import UIKit
 
 class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let dayPlan: DayPlan
+    var dayPlan: DayPlan!
     var exercises: [Exercise] = []
-    let tableView = UITableView()
-    let startButton = UIButton(type: .system)
     
-    init(dayPlan: DayPlan) {
-        self.dayPlan = dayPlan
-        super.init(nibName: nil, bundle: nil)
-        
-        let allEx = ExerciseLibrary.all
-        if let exIds = dayPlan.exercises {
-            self.exercises = exIds.compactMap { id in allEx.first(where: { $0.id == id }) }
-        }
-    }
-    
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var blurView: UIVisualEffectView!
+    @IBOutlet weak var startButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = dayPlan.day
-        view.backgroundColor = .black
+        title = dayPlan?.day
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .black
-        tableView.separatorStyle = .none
-        tableView.register(ExerciseCell.self, forCellReuseIdentifier: "ExerciseCell")
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
+        let allEx = ExerciseLibrary.all
+        if let exIds = dayPlan?.exercises {
+            self.exercises = exIds.compactMap { id in allEx.first(where: { $0.id == id }) }
+        }
         
-        let blurEffect = UIBlurEffect(style: .systemThinMaterialDark)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.layer.cornerRadius = 16
-        blurView.clipsToBounds = true
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurView)
+        if tableView != nil {
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+        }
         
-        startButton.setTitle("Start Workout", for: .normal)
-        startButton.setTitleColor(.white, for: .normal)
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        startButton.translatesAutoresizingMaskIntoConstraints = false
-        startButton.addTarget(self, action: #selector(startWorkout), for: .touchUpInside)
-        blurView.contentView.addSubview(startButton)
+        if let blurView = blurView {
+            blurView.layer.cornerRadius = 16
+            blurView.clipsToBounds = true
+            blurView.translatesAutoresizingMaskIntoConstraints = false
+        }
         
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: blurView.topAnchor, constant: -20),
-            
-            blurView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            blurView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            blurView.widthAnchor.constraint(equalToConstant: 200),
-            blurView.heightAnchor.constraint(equalToConstant: 56),
-            
-            startButton.topAnchor.constraint(equalTo: blurView.topAnchor),
-            startButton.bottomAnchor.constraint(equalTo: blurView.bottomAnchor),
-            startButton.leadingAnchor.constraint(equalTo: blurView.leadingAnchor),
-            startButton.trailingAnchor.constraint(equalTo: blurView.trailingAnchor)
-        ])
+        if let btn = startButton {
+            btn.translatesAutoresizingMaskIntoConstraints = false
+            if let blurView = blurView {
+                NSLayoutConstraint.activate([
+                    btn.topAnchor.constraint(equalTo: blurView.topAnchor),
+                    btn.bottomAnchor.constraint(equalTo: blurView.bottomAnchor),
+                    btn.leadingAnchor.constraint(equalTo: blurView.leadingAnchor),
+                    btn.trailingAnchor.constraint(equalTo: blurView.trailingAnchor)
+                ])
+            }
+        }
+        
+        if let tableView = tableView, let blurView = blurView {
+            NSLayoutConstraint.activate([
+                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: blurView.topAnchor, constant: -20),
+                
+                blurView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                blurView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                blurView.widthAnchor.constraint(equalToConstant: 200),
+                blurView.heightAnchor.constraint(equalToConstant: 56)
+            ])
+        }
     }
     
-    @objc func startWorkout() {
+    @IBAction func startWorkout(_ sender: UIButton) {
         if exercises.isEmpty { return }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let vc = storyboard.instantiateInitialViewController() as? ViewController {
+        if let vc = storyboard.instantiateViewController(withIdentifier: "TimerViewController") as? ViewController {
             vc.exercises = self.exercises
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -501,49 +478,45 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
 class ExerciseCell: UITableViewCell {
     
-    let containerView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
-    let titleLabel = UILabel()
-    let durationLabel = UILabel()
+    @IBOutlet weak var containerView: UIVisualEffectView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func awakeFromNib() {
+        super.awakeFromNib()
         backgroundColor = .clear
-        selectionStyle = .none
-        
-        containerView.layer.cornerRadius = 12
-        containerView.clipsToBounds = true
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(containerView)
-        
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        titleLabel.textColor = .white
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        containerView.contentView.addSubview(titleLabel)
-        
-        durationLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        durationLabel.textColor = .lightGray
-        durationLabel.translatesAutoresizingMaskIntoConstraints = false
-        containerView.contentView.addSubview(durationLabel)
-        
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+        if let containerView = containerView {
+            containerView.layer.cornerRadius = 12
+            containerView.clipsToBounds = true
+            containerView.translatesAutoresizingMaskIntoConstraints = false
             
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+                containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
+                containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            ])
             
-            durationLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            durationLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            durationLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
-        ])
+            if let tl = titleLabel {
+                tl.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    tl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+                    tl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16)
+                ])
+            }
+            if let dl = durationLabel, let tl = titleLabel {
+                dl.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    dl.topAnchor.constraint(equalTo: tl.bottomAnchor, constant: 4),
+                    dl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                    dl.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -12)
+                ])
+            }
+        }
     }
     
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    
     func configure(with exercise: Exercise) {
-        titleLabel.text = exercise.name
-        durationLabel.text = "\(exercise.duration)s"
+        titleLabel?.text = exercise.name
+        durationLabel?.text = "\(exercise.duration)s"
     }
 }
