@@ -20,10 +20,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        exerciseimage.contentMode = .scaleAspectFit
+        
         if exercises.isEmpty {
             exercises = ExerciseLibrary.all
         }
+        
         showExercise(at: 0)
     }
 
@@ -380,6 +381,8 @@ class DayCell: UITableViewCell {
             
             if let dl = dayLabel {
                 dl.translatesAutoresizingMaskIntoConstraints = false
+                dl.font = .systemFont(ofSize: 22, weight: .bold)
+                dl.textColor = .white
                 NSLayoutConstraint.activate([
                     dl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
                     dl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20)
@@ -387,6 +390,8 @@ class DayCell: UITableViewCell {
             }
             if let fl = focusLabel {
                 fl.translatesAutoresizingMaskIntoConstraints = false
+                fl.font = .systemFont(ofSize: 16, weight: .medium)
+                fl.textColor = UIColor.white.withAlphaComponent(0.7)
                 NSLayoutConstraint.activate([
                     fl.topAnchor.constraint(equalTo: dayLabel.bottomAnchor, constant: 4),
                     fl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
@@ -441,6 +446,8 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         if let btn = startButton {
             btn.translatesAutoresizingMaskIntoConstraints = false
+            btn.tintColor = .white
+            btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
             if let blurView = blurView {
                 NSLayoutConstraint.activate([
                     btn.topAnchor.constraint(equalTo: blurView.topAnchor),
@@ -509,6 +516,8 @@ class ExerciseCell: UITableViewCell {
             
             if let tl = titleLabel {
                 tl.translatesAutoresizingMaskIntoConstraints = false
+                tl.font = .systemFont(ofSize: 18, weight: .semibold)
+                tl.textColor = .white
                 NSLayoutConstraint.activate([
                     tl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
                     tl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16)
@@ -516,6 +525,8 @@ class ExerciseCell: UITableViewCell {
             }
             if let dl = durationLabel, let tl = titleLabel {
                 dl.translatesAutoresizingMaskIntoConstraints = false
+                dl.font = .systemFont(ofSize: 14, weight: .medium)
+                dl.textColor = UIColor.white.withAlphaComponent(0.6)
                 NSLayoutConstraint.activate([
                     dl.topAnchor.constraint(equalTo: tl.bottomAnchor, constant: 4),
                     dl.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),

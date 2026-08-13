@@ -16,82 +16,229 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852" />
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pushups" translatesAutoresizingMaskIntoConstraints="NO" id="A8F-25-xcI">
-                                <rect key="frame" x="28" y="118" width="349" height="247" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Exercise Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TnS-VX-PtV">
+                                <rect key="frame" x="20" y="79" width="353" height="38.333333333333343" />
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="32" />
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                <nil key="highlightedColor" />
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pushups" translatesAutoresizingMaskIntoConstraints="NO" id="A8F-25-xcI">
+                                <rect key="frame" x="30" y="147.33333333333334" width="333" height="333.33333333333326" />
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="A8F-25-xcI" secondAttribute="height" multiplier="1:1" id="img-aspect" />
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="24" />
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="pushups" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TnS-VX-PtV">
-                                <rect key="frame" x="61" y="358" width="271" height="32" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="28" />
-                                <nil key="textColor" />
-                                <nil key="highlightedColor" />
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6qh-I0-Y0n">
-                                <rect key="frame" x="166" y="398" width="77" height="36" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30" />
-                                <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
-                                <nil key="highlightedColor" />
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="02:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkj-6f-HaP">
-                                <rect key="frame" x="166" y="398" width="78" height="33" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="27" />
-                                <nil key="textColor" />
-                                <nil key="highlightedColor" />
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gTl-VR-YW9" userLabel="Pause">
-                                <rect key="frame" x="248" y="566" width="93" height="43" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <state key="normal" title="Button" />
-                                <buttonConfiguration key="configuration" style="gray" title="Pause">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="24" />
-                                    <color key="baseForegroundColor" systemColor="systemPinkColor" />
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="pausebuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2QI-gq-v8h" />
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bAu-5l-2j2">
-                                <rect key="frame" x="64" y="641" width="89" height="43" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <state key="normal" title="Button" />
-                                <buttonConfiguration key="configuration" style="gray" title="Reset">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="24" />
-                                    <color key="baseForegroundColor" systemColor="tableCellBlueTextColor" />
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="resetbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3V3-9c-Kqr" />
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvs-vB-g2F">
-                                <rect key="frame" x="248" y="640" width="77" height="43" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <state key="normal" title="Button" />
-                                <buttonConfiguration key="configuration" style="gray" title="Next">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="24" />
-                                    <color key="baseForegroundColor" systemColor="systemYellowColor" />
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="nextbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="anC-U3-uyw" />
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5mo-bb-v7f" userLabel="Start">
-                                <rect key="frame" x="68" y="566" width="80" height="43" />
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
-                                <state key="normal" title="Button" />
-                                <buttonConfiguration key="configuration" style="gray" title="Start">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="24" />
-                                    <color key="baseForegroundColor" systemColor="systemGreenColor" />
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="startbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hYC-cO-7GI" />
-                                </connections>
-                            </button>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="timer-glass">
+                                <rect key="frame" x="86.666666666666686" y="520.66666666666663" width="220" height="80" />
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="timer-glass-content">
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="80" />
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkj-6f-HaP">
+                                            <rect key="frame" x="0.0" y="0.0" width="220" height="80" />
+                                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="56" />
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                            <nil key="highlightedColor" />
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="nkj-6f-HaP" firstAttribute="leading" secondItem="timer-glass-content" secondAttribute="leading" id="timer-lbl-1" />
+                                        <constraint firstAttribute="trailing" secondItem="nkj-6f-HaP" secondAttribute="trailing" id="timer-lbl-2" />
+                                        <constraint firstItem="nkj-6f-HaP" firstAttribute="top" secondItem="timer-glass-content" secondAttribute="top" id="timer-lbl-3" />
+                                        <constraint firstAttribute="bottom" secondItem="nkj-6f-HaP" secondAttribute="bottom" id="timer-lbl-4" />
+                                    </constraints>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="220" id="timer-glass-w" />
+                                    <constraint firstAttribute="height" constant="80" id="timer-glass-h" />
+                                </constraints>
+                                <blurEffect style="systemThinMaterialDark" />
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="24" />
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="btn-stack-main">
+                                <rect key="frame" x="50" y="650.66666666666663" width="293" height="112" />
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="btn-stack-row-1">
+                                        <rect key="frame" x="0.0" y="0.0" width="293" height="46" />
+                                        <subviews>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="start-glass">
+                                                <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="start-glass-content">
+                                                    <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5mo-bb-v7f">
+                                                            <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                            <state key="normal" title="Button" />
+                                                            <buttonConfiguration key="configuration" style="plain" title="Start">
+                                                                <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18" />
+                                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="startbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hYC-cO-7GI" />
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="5mo-bb-v7f" secondAttribute="bottom" id="start-btn-4" />
+                                                        <constraint firstAttribute="trailing" secondItem="5mo-bb-v7f" secondAttribute="trailing" id="start-btn-2" />
+                                                        <constraint firstItem="5mo-bb-v7f" firstAttribute="top" secondItem="start-glass-content" secondAttribute="top" id="start-btn-3" />
+                                                        <constraint firstItem="5mo-bb-v7f" firstAttribute="leading" secondItem="start-glass-content" secondAttribute="leading" id="start-btn-1" />
+                                                    </constraints>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="46" id="start-glass-h" />
+                                                </constraints>
+                                                <blurEffect style="systemUltraThinMaterialDark" />
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="16" />
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES" />
+                                                </userDefinedRuntimeAttributes>
+                                            </visualEffectView>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pause-glass">
+                                                <rect key="frame" x="156.66666666666663" y="0.0" width="136.33333333333337" height="46" />
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pause-glass-content">
+                                                    <rect key="frame" x="0.0" y="0.0" width="136.33333333333337" height="46" />
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gTl-VR-YW9">
+                                                            <rect key="frame" x="0.0" y="0.0" width="136.33333333333334" height="46" />
+                                                            <state key="normal" title="Button" />
+                                                            <buttonConfiguration key="configuration" style="plain" title="Pause">
+                                                                <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18" />
+                                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="pausebuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2QI-gq-v8h" />
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="gTl-VR-YW9" secondAttribute="trailing" id="pause-btn-2" />
+                                                        <constraint firstAttribute="bottom" secondItem="gTl-VR-YW9" secondAttribute="bottom" id="pause-btn-4" />
+                                                        <constraint firstItem="gTl-VR-YW9" firstAttribute="leading" secondItem="pause-glass-content" secondAttribute="leading" id="pause-btn-1" />
+                                                        <constraint firstItem="gTl-VR-YW9" firstAttribute="top" secondItem="pause-glass-content" secondAttribute="top" id="pause-btn-3" />
+                                                    </constraints>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="46" id="pause-glass-h" />
+                                                </constraints>
+                                                <blurEffect style="systemUltraThinMaterialDark" />
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="16" />
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES" />
+                                                </userDefinedRuntimeAttributes>
+                                            </visualEffectView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="btn-stack-row-2">
+                                        <rect key="frame" x="0.0" y="66" width="293" height="46" />
+                                        <subviews>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="reset-glass">
+                                                <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="reset-glass-content">
+                                                    <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bAu-5l-2j2">
+                                                            <rect key="frame" x="0.0" y="0.0" width="136.66666666666666" height="46" />
+                                                            <state key="normal" title="Button" />
+                                                            <buttonConfiguration key="configuration" style="plain" title="Reset">
+                                                                <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18" />
+                                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="resetbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3V3-9c-Kqr" />
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="bAu-5l-2j2" secondAttribute="bottom" id="reset-btn-4" />
+                                                        <constraint firstItem="bAu-5l-2j2" firstAttribute="leading" secondItem="reset-glass-content" secondAttribute="leading" id="reset-btn-1" />
+                                                        <constraint firstAttribute="trailing" secondItem="bAu-5l-2j2" secondAttribute="trailing" id="reset-btn-2" />
+                                                        <constraint firstItem="bAu-5l-2j2" firstAttribute="top" secondItem="reset-glass-content" secondAttribute="top" id="reset-btn-3" />
+                                                    </constraints>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="46" id="reset-glass-h" />
+                                                </constraints>
+                                                <blurEffect style="systemUltraThinMaterialDark" />
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="16" />
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES" />
+                                                </userDefinedRuntimeAttributes>
+                                            </visualEffectView>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="next-glass">
+                                                <rect key="frame" x="156.66666666666663" y="0.0" width="136.33333333333337" height="46" />
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="next-glass-content">
+                                                    <rect key="frame" x="0.0" y="0.0" width="136.33333333333337" height="46" />
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvs-vB-g2F">
+                                                            <rect key="frame" x="0.0" y="0.0" width="136.33333333333334" height="46" />
+                                                            <state key="normal" title="Button" />
+                                                            <buttonConfiguration key="configuration" style="plain" title="Next">
+                                                                <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18" />
+                                                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="nextbuttontapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="anC-U3-uyw" />
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="uvs-vB-g2F" secondAttribute="bottom" id="next-btn-4" />
+                                                        <constraint firstItem="uvs-vB-g2F" firstAttribute="leading" secondItem="next-glass-content" secondAttribute="leading" id="next-btn-1" />
+                                                        <constraint firstAttribute="trailing" secondItem="uvs-vB-g2F" secondAttribute="trailing" id="next-btn-2" />
+                                                        <constraint firstItem="uvs-vB-g2F" firstAttribute="top" secondItem="next-glass-content" secondAttribute="top" id="next-btn-3" />
+                                                    </constraints>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="46" id="next-glass-h" />
+                                                </constraints>
+                                                <blurEffect style="systemUltraThinMaterialDark" />
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="16" />
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES" />
+                                                </userDefinedRuntimeAttributes>
+                                            </visualEffectView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY" />
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" />
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace" />
+                        <constraints>
+                            <constraint firstItem="TnS-VX-PtV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="con-title-1" />
+                            <constraint firstItem="TnS-VX-PtV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="con-title-2" />
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TnS-VX-PtV" secondAttribute="trailing" constant="20" id="con-title-3" />
+                            <constraint firstItem="A8F-25-xcI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="con-img-1" />
+                            <constraint firstItem="A8F-25-xcI" firstAttribute="top" secondItem="TnS-VX-PtV" secondAttribute="bottom" constant="30" id="con-img-2" />
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="A8F-25-xcI" secondAttribute="trailing" constant="30" id="con-img-3" />
+                            <constraint firstItem="timer-glass" firstAttribute="top" secondItem="A8F-25-xcI" secondAttribute="bottom" constant="40" id="con-glass-1" />
+                            <constraint firstItem="timer-glass" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="con-glass-2" />
+                            <constraint firstItem="btn-stack-main" firstAttribute="top" secondItem="timer-glass" secondAttribute="bottom" constant="50" id="con-stack-1" />
+                            <constraint firstItem="btn-stack-main" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="con-stack-2" />
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="btn-stack-main" secondAttribute="trailing" constant="50" id="con-stack-3" />
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="exerciseimage" destination="A8F-25-xcI" id="Tus-Bl-lhz" />
