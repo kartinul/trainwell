@@ -248,15 +248,25 @@ class HomeViewController: UIViewController {
         }
         
         if let tf = focusTextField {
-            tf.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-            tf.layer.cornerRadius = 12
+            tf.borderStyle = .none
+            tf.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+            tf.layer.cornerRadius = 25
             tf.layer.borderWidth = 1
-            tf.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
+            tf.layer.borderColor = UIColor.white.withAlphaComponent(0.3).cgColor
+            tf.textColor = .white
+            tf.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+            tf.tintColor = .white
+            
+            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 50))
             tf.leftView = paddingView
             tf.leftViewMode = .always
+            
+            let rightPadding = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 50))
+            tf.rightView = rightPadding
+            tf.rightViewMode = .always
+            
             if let placeholder = tf.placeholder {
-                tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor.lightGray])
+                tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.6)])
             }
             tf.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
