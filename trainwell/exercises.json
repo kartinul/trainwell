@@ -1,0 +1,19 @@
+[
+  { "id": "3-4_sit-up",                           "name": "3/4 Sit-Up",                           "category": "Core",        "videoFile": "3-4_sit-up.gif",                           "duration": 60  },
+  { "id": "air_bike",                              "name": "Air Bike",                              "category": "Core",        "videoFile": "air_bike.gif",                              "duration": 60  },
+  { "id": "alternate_heel_touchers",               "name": "Alternate Heel Touchers",               "category": "Core",        "videoFile": "alternate_heel_touchers.gif",               "duration": 60  },
+  { "id": "balance_board",                         "name": "Balance Board",                         "category": "Full Body",   "videoFile": "balance_board.gif",                         "duration": 60  },
+  { "id": "bench_dip_knees_bent",                  "name": "Bench Dip (Knees Bent)",                "category": "Upper Body",  "videoFile": "bench_dip_(knees_bent).gif",               "duration": 60  },
+  { "id": "bench_hip_extension",                   "name": "Bench Hip Extension",                   "category": "Lower Body",  "videoFile": "bench_hip_extension.gif",                   "duration": 60  },
+  { "id": "biceps_narrow_pull-ups",                "name": "Biceps Narrow Pull-Ups",                "category": "Upper Body",  "videoFile": "biceps_narrow_pull-ups.gif",                "duration": 60  },
+  { "id": "body-up",                               "name": "Body Up",                               "category": "Upper Body",  "videoFile": "body-up.gif",                               "duration": 60  },
+  { "id": "bottoms-up",                            "name": "Bottoms Up",                            "category": "Core",        "videoFile": "bottoms-up.gif",                            "duration": 60  },
+  { "id": "butterfly_yoga_pose",                   "name": "Butterfly Yoga Pose",                   "category": "Flexibility", "videoFile": "butterfly_yoga_pose.gif",                   "duration": 60  },
+  { "id": "chest_and_front_of_shoulder_stretch",   "name": "Chest & Shoulder Stretch",              "category": "Flexibility", "videoFile": "chest_and_front_of_shoulder_stretch.gif",   "duration": 60  },
+  { "id": "isometric_chest_squeeze",               "name": "Isometric Chest Squeeze",               "category": "Upper Body",  "videoFile": "isometric_chest_squeeze.gif",               "duration": 60  },
+  { "id": "jump_squat",                            "name": "Jump Squat",                            "category": "Lower Body",  "videoFile": "jump_squat_v._2.gif",                      "duration": 60  },
+  { "id": "reverse_hyper_on_flat_bench",           "name": "Reverse Hyper on Flat Bench",           "category": "Lower Body",  "videoFile": "reverse_hyper_on_flat_bench.gif",           "duration": 60  },
+  { "id": "runners_stretch",                       "name": "Runner's Stretch",                      "category": "Flexibility", "videoFile": "runners_stretch.gif",                       "duration": 60  },
+  { "id": "superman_push-up",                      "name": "Superman Push-Up",                      "category": "Upper Body",  "videoFile": "superman_push-up.gif",                      "duration": 60  },
+  { "id": "suspended_push-up",                     "name": "Suspended Push-Up",                     "category": "Upper Body",  "videoFile": "suspended_push-up.gif",                     "duration": 60  }
+]
