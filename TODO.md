@@ -11,31 +11,31 @@
 ## Left to Build
 
 ### 1. Home Screen
-- Text input: "what do you want to focus on?"
-- "Generate Plan" button
-- New `HomeViewController` + storyboard scene
+- [x] Text input: "what do you want to focus on?"
+- [x] "Generate Plan" button
+- [x] New `HomeViewController` + storyboard scene
 
 ### 2. OpenAI Integration
-- `POST` to OpenAI API with user's goal text
-- Structured JSON response → weekly plan (7 days, rest days included)
-- `WorkoutPlan.swift` + `DayPlan.swift` models
+- [x] `POST` to OpenAI API with user's goal text
+- [x] Structured JSON response → weekly plan (7 days, rest days included)
+- [x] `WorkoutPlan.swift` + `DayPlan.swift` models
 
 ### 3. Weekly Plan Screen
-- 7-day strip (Mon–Sun)
-- Rest days shown differently (greyed out)
-- Tap a day → that day's workout
-- New `WeekViewController`
+- [x] 7-day strip (Mon–Sun)
+- [x] Rest days shown differently (greyed out)
+- [x] Tap a day → that day's workout
+- [x] New `WeekViewController`
 
 ### 4. Day / Workout Screen
-- List of exercises for the day
-- Tap one → existing timer screen
-- New `DayViewController`
+- [x] List of exercises for the day
+- [x] Tap one → existing timer screen
+- [x] New `DayViewController`
 
 ### 5. Navigation
-- Wire up: Home → Weekly Plan → Day → Workout timer
-- Pass selected exercises to `ViewController`
+- [x] Wire up: Home → Weekly Plan → Day → Workout timer
+- [x] Pass selected exercises to `ViewController`
 
 ### 6. Liquid Glass UI
-- Apply `UIGlassEffect` to buttons + cards (iOS 26)
-- Polish typography, spacing, colors
-- Do this last as a full visual pass
+- [x] Apply `UIGlassEffect` to buttons + cards (iOS 26) -> (Used UIBlurEffect for actual iOS support)
+- [x] Polish typography, spacing, colors
+- [x] Do this last as a full visual pass
